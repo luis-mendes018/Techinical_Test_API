@@ -1,0 +1,41 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.db
+*.bak
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Logs
+*.log
+
+# Local config
+appsettings.Development.json
+.env
+.env.*
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
