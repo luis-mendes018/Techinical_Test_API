@@ -57,4 +57,48 @@ public class WeatherController : ControllerBase
             return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
         }
     }
+
+
+    [HttpGet("record-data/{id}")]
+    public async Task<IActionResult> GetRecordedDataById(int id)
+    {
+        try
+        {
+            var weatherRecord = await _weatherService.GetRecordedDataByIdAsync(id);
+
+            if (weatherRecord == null)
+            {
+                return NotFound("Id not found");
+            }
+
+            return Ok(weatherRecord);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
+        }
+    }
+
+    [HttpDelete("delete-data/{id}")]
+    public async Task<IActionResult> DeleteRecordedData(int id)
+    {
+        try
+        {
+            var success = await _weatherService.DeleteDataAsync(id);
+
+            if (success)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound("Id not found");
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
+        }
+    }
+
 }

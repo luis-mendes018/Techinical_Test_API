@@ -77,4 +77,15 @@ public class WeatherService : IWeatherService
     {
         return await _weatherRepository.GetAsync();
     }
+
+    public async Task<Weather> GetRecordedDataByIdAsync(int id)
+    {
+        return await _weatherRepository.GetByIdAsync(id);
+    }
+
+    public async Task<bool> DeleteDataAsync(int id)
+    {
+        var rowsAffected = await _weatherRepository.DeleteAsync(id);
+        return rowsAffected > 0;
+    }
 }

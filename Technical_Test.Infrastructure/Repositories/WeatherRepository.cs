@@ -65,4 +65,42 @@ public class WeatherRepository : IWeatherRepository
             return result;
         }
     }
+
+    public async Task<Weather> GetByIdAsync(int id)
+    {
+        if (string.IsNullOrEmpty(_connectionString))
+        {
+            throw new InvalidOperationException("Database connection string is not configured.");
+        }
+
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            var result = await connection.QueryFirstOrDefaultAsync<Weather>(
+                "dbo.sp_GetWeatherHistoryById",
+                new { Id = id },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result ?? throw new InvalidOperationException($"Weather with Id {id} not found.");
+        }
+    }
+
+    public async Task<int> DeleteAsync(int id)
+    {
+        if (string.IsNullOrEmpty(_connectionString))
+        {
+            throw new InvalidOperationException("Database connection string is not configured.");
+        }
+
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            var rowsAffected = await connection.QueryFirstOrDefaultAsync<int>( // Use QueryFirstOrDefaultAsync
+                "dbo.sp_DeleteWeatherHistory",
+                new { Id = id },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return rowsAffected;
+        }
+    }
 }

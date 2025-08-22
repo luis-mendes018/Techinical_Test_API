@@ -1,9 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Technical_Test.Domain.Entities;
 
 public class Weather
 {
+    [Key]
+    public int Id { get; set; }
+
     [JsonPropertyName("lon")]
     public double? Lon { get; set; }
 
