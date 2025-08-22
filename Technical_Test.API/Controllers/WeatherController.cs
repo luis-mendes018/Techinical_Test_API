@@ -37,4 +37,24 @@ public class WeatherController : ControllerBase
             return StatusCode(500, new { message = "An internal server error occurred." });
         }
     }
+
+    [HttpGet("record-data")]
+    public async Task<IActionResult> GetRecordedData()
+    {
+        try
+        {
+            var weatherRecords = await _weatherService.GetRecordedDataAsync();
+
+            if (weatherRecords == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(weatherRecords);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
+        }
+    }
 }

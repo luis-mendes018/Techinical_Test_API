@@ -1,21 +1,22 @@
 ﻿using Microsoft.Extensions.Configuration;
-
 using System.Text.Json;
-using System.Text.Json.Serialization;
-
 using Technical_Test.Application.Interfaces;
 using Technical_Test.Domain.Entities;
+using Technical_Test.Domain.Repositories.Interfaces;
+using Technical_Test.Infrastructure.Services.Helper_Classes;
 
 namespace Technical_Test.Infrastructure.Services;
 public class WeatherService : IWeatherService
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
+    private readonly IWeatherRepository _weatherRepository;
 
-    public WeatherService(HttpClient httpClient, IConfiguration configuration)
+    public WeatherService(HttpClient httpClient, IConfiguration configuration, IWeatherRepository weatherRepository)
     {
         _httpClient = httpClient;
         _configuration = configuration;
+        _weatherRepository = weatherRepository;
     }
 
     public async Task<Weather> GetCurrentWeatherAsync(string city)
@@ -54,6 +55,8 @@ public class WeatherService : IWeatherService
                 Speed = apiResponse?.Wind?.Speed
             };
 
+            await _weatherRepository.AddAsync(weatherData, city);
+
             return weatherData;
         }
         catch (HttpRequestException ex)
@@ -69,66 +72,9 @@ public class WeatherService : IWeatherService
             throw new ApplicationException($"An unexpected error occurred: {ex.Message}", ex);
         }
     }
-}
 
-
-public class Coord
-{
-    [JsonPropertyName("lon")]
-    public double? Lon { get; set; }
-    [JsonPropertyName("lat")]
-    public double? Lat { get; set; }
-}
-
-// Classe para a seção "weather"
-public class WeatherInfo
-{
-    [JsonPropertyName("main")]
-    public string? Main { get; set; }
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-}
-
-// Classe para a seção "main"
-public class MainData
-{
-    [JsonPropertyName("temp")]
-    public double? Temp { get; set; }
-    [JsonPropertyName("temp_min")]
-    public double? TempMin { get; set; }
-    [JsonPropertyName("temp_max")]
-    public double? TempMax { get; set; }
-}
-
-// Classe para a seção "wind"
-public class Wind
-{
-    [JsonPropertyName("speed")]
-    public double? Speed { get; set; }
-}
-
-// Classe para a seção "sys"
-public class Sys
-{
-    [JsonPropertyName("sunrise")]
-    public long? Sunrise { get; set; }
-    [JsonPropertyName("sunset")]
-    public long? Sunset { get; set; }
-}
-
-// Classe principal que representa a resposta completa
-public class OpenWeatherMapResponse
-{
-    [JsonPropertyName("coord")]
-    public Coord? Coord { get; set; }
-    [JsonPropertyName("weather")]
-    public List<WeatherInfo>? Weather { get; set; }
-    [JsonPropertyName("main")]
-    public MainData? Main { get; set; }
-    [JsonPropertyName("visibility")]
-    public int? Visibility { get; set; }
-    [JsonPropertyName("wind")]
-    public Wind? Wind { get; set; }
-    [JsonPropertyName("sys")]
-    public Sys? Sys { get; set; }
+    public async Task<IEnumerable<Weather>> GetRecordedDataAsync()
+    {
+        return await _weatherRepository.GetAsync();
+    }
 }

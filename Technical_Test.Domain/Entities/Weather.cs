@@ -33,4 +33,7 @@ public class Weather
 
     [JsonPropertyName("speed")]
     public double? Speed { get; set; }
+
+    [JsonPropertyName("city")]
+    public string? City { get; set; }
 }
