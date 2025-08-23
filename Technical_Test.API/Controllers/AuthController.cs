@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Technical_Test.Application.DTOs;
 using Technical_Test.Application.Interfaces;
+using Technical_Test.Domain.Services.Interfaces;
 
 namespace Technical_Test.API.Controllers;
 
@@ -10,14 +11,16 @@ namespace Technical_Test.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly ITokenService _tokenService;
     private readonly IValidator<LoginDto> _loginDtoValidator;
     private readonly IValidator<RegisterDto> _registerDtoValidator;
 
-    public AuthController(IAuthService authService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator)
+    public AuthController(IAuthService authService, IValidator<LoginDto> loginDtoValidator, IValidator<RegisterDto> registerDtoValidator, ITokenService tokenService)
     {
         _authService = authService;
         _loginDtoValidator = loginDtoValidator;
         _registerDtoValidator = registerDtoValidator;
+        _tokenService = tokenService;
     }
 
     [HttpPost("login")]
@@ -31,20 +34,25 @@ public class AuthController : ControllerBase
                 return BadRequest(validationResult.Errors);
             }
 
-            var token = await _authService.LoginAsync(loginDto);
-
-            if (token == null)
+            var user = await _authService.LoginAsync(loginDto);
+            if (user == null)
             {
                 return Unauthorized(new { message = "Invalid username or password." });
             }
 
-            return Ok(new { token });
+            
+            var token = _tokenService.GenerateJwtToken(user);
+            var refreshToken = await _authService.GenerateRefreshTokenAsync(user.Id);
+
+            return Ok(new { AccessToken = token, RefreshToken = refreshToken });
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
 
+            Console.WriteLine("Error log: {0} ", ex);
             return StatusCode(500, "Error processing request");
+
         }
     }
 
@@ -76,4 +84,22 @@ public class AuthController : ControllerBase
         }
 
     }
+
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+    {
+        var user = await _authService.ValidateRefreshTokenAsync(refreshToken);
+        if (user == null)
+        {
+            return Unauthorized(new { message = "Invalid refresh token." });
+        }
+
+        var newAccessToken = _tokenService.GenerateJwtToken(user);
+        await _authService.RevokeRefreshTokenAsync(refreshToken); // Revoga o token antigo por segurança
+        var newRefreshToken = await _authService.GenerateRefreshTokenAsync(user.Id);
+
+        return Ok(new { AccessToken = newAccessToken, RefreshToken = newRefreshToken });
+    }
+
 }

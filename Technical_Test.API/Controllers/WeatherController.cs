@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Technical_Test.Application.Interfaces;
 
 namespace Technical_Test.API.Controllers;
 
 [Route("api/v1/weather")]
 [ApiController]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class WeatherController : ControllerBase
 {
     private readonly IWeatherService _weatherService;

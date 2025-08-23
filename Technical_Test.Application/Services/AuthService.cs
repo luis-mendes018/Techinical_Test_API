@@ -14,25 +14,24 @@ public class AuthService : IAuthService
         _userRepository = userRepository;
     }
 
-    public async Task<string> LoginAsync(LoginDto loginDto)
+    public async Task<User> LoginAsync(LoginDto loginDto)
     {
         var user = await _userRepository.GetUserByUsernameAsync(loginDto.Username);
-
         if (user == null)
         {
             return null;
         }
 
         var passwordMatches = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
-
         if (!passwordMatches)
         {
             return null;
         }
 
-        // TODO: Implementar a geração do JWT
-        return await Task.FromResult("token-placeholder-aqui");
+        return user;
     }
+
+
     public async Task<User> RegisterUserAsync(RegisterDto registerDto)
     {
         try
@@ -61,9 +60,41 @@ public class AuthService : IAuthService
         }
     }
 
-    public static string HashPassword(string password)
+    private static string HashPassword(string password)
     {
         return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+
+    public async Task<string> GenerateRefreshTokenAsync(int userId)
+    {
+        var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        var refreshToken = new RefreshToken
+        {
+            Token = token,
+            ExpirationDate = DateTime.UtcNow.AddDays(7), // Token expira em 7 dias
+            UserId = userId,
+            IsRevoked = false
+        };
+        await _userRepository.AddRefreshTokenAsync(refreshToken);
+        return token;
+    }
+
+    public async Task<User> ValidateRefreshTokenAsync(string refreshToken)
+    {
+        var storedToken = await _userRepository.GetRefreshTokenAsync(refreshToken);
+
+        if (storedToken == null || storedToken.IsRevoked || storedToken.ExpirationDate < DateTime.UtcNow)
+        {
+            return null;
+        }
+
+        var user = await _userRepository.GetUserByIdAsync(storedToken.UserId);
+        return user;
+    }
+
+    public async Task RevokeRefreshTokenAsync(string refreshToken)
+    {
+        await _userRepository.RevokeRefreshTokenAsync(refreshToken);
     }
 
 }
