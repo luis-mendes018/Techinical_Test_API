@@ -94,7 +94,7 @@ public class WeatherRepository : IWeatherRepository
 
         using (var connection = new SqlConnection(_connectionString))
         {
-            var rowsAffected = await connection.QueryFirstOrDefaultAsync<int>( // Use QueryFirstOrDefaultAsync
+            var rowsAffected = await connection.QueryFirstOrDefaultAsync<int>(
                 "dbo.sp_DeleteWeatherHistory",
                 new { Id = id },
                 commandType: CommandType.StoredProcedure
