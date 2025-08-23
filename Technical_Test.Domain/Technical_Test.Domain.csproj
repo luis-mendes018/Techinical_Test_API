@@ -3,7 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Repositories\Interfaces\IUserRepository.cs~RF3090be3a.TMP" />
+  </ItemGroup>
 
 </Project>

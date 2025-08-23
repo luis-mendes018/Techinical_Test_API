@@ -30,14 +30,14 @@ public class Weather
     public long? Sunset { get; set; }
 
     [JsonPropertyName("description")]
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
     [JsonPropertyName("main")]
-    public string? Main { get; set; }
+    public string Main { get; set; }
 
     [JsonPropertyName("speed")]
     public double? Speed { get; set; }
 
     [JsonPropertyName("city")]
-    public string? City { get; set; }
+    public string City { get; set; }
 }

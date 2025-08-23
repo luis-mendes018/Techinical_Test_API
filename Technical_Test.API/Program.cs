@@ -1,10 +1,15 @@
+using FluentValidation;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using System.Text;
 
+using Technical_Test.Application.DTOs;
 using Technical_Test.Application.Interfaces;
+using Technical_Test.Application.Services;
+using Technical_Test.Application.Validators;
 using Technical_Test.Domain.Repositories.Interfaces;
 using Technical_Test.Infrastructure.Data;
 using Technical_Test.Infrastructure.Repositories;
@@ -81,8 +86,19 @@ builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Configuration.AddJsonFile("appsettings.json");
 
 builder.Services.AddHttpClient();
+
+//Services
 builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+
+//Respositories
+builder.Services.AddScoped<IUserRepository, UserRepository>(); 
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+
+//FluentValidation
+builder.Services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
+builder.Services.AddScoped<IValidator<RegisterDto>, RegisterDtoValidator>();
 
 var app = builder.Build();
 

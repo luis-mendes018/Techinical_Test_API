@@ -1,5 +1,6 @@
 ﻿using Technical_Test.Application.DTOs;
 using Technical_Test.Application.Interfaces;
+using Technical_Test.Domain.Entities;
 using Technical_Test.Domain.Repositories.Interfaces;
 
 namespace Technical_Test.Application.Services;
@@ -19,13 +20,50 @@ public class AuthService : IAuthService
 
         if (user == null)
         {
-            // Retorna null ou lança uma exceção se o usuário não for encontrado
             return null;
         }
 
-        // TODO: Implementar a validação da senha aqui (usando uma biblioteca de hash)
+        var passwordMatches = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
 
-        // Por enquanto, apenas retorna um token se o usuário existir
+        if (!passwordMatches)
+        {
+            return null;
+        }
+
+        // TODO: Implementar a geração do JWT
         return await Task.FromResult("token-placeholder-aqui");
     }
+    public async Task<User> RegisterUserAsync(RegisterDto registerDto)
+    {
+        try
+        {
+            var existingUser = await _userRepository.GetUserByUsernameAsync(registerDto.Username);
+            if (existingUser != null)
+            {
+                return null;
+            }
+
+            
+            var passwordHash = HashPassword(registerDto.Password);
+
+            var newUser = new User
+            {
+                Username = registerDto.Username,
+                PasswordHash = passwordHash,
+            };
+
+            await _userRepository.AddUserAsync(newUser);
+            return newUser;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public static string HashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+
 }

@@ -22,7 +22,7 @@ public class DatabaseInitializer
 
     public async Task InitializeAsync()
     {
-        // Verifique se o banco de dados existe e crie-o se não existir
+        // Verifica se o banco de dados existe e cria se o mesmo não existir
         await using (var connection = new SqlConnection(_masterConnectionString))
         {
             var sql = $"SELECT COUNT(*) FROM sys.databases WHERE name = @name";
@@ -34,7 +34,7 @@ public class DatabaseInitializer
             }
         }
 
-        // Crie a tabela na nova base de dados
+        // Cria a tabela na nova base de dados
         await using (var connection = new SqlConnection(_connectionString))
         {
             var sql = @"
@@ -53,7 +53,28 @@ public class DatabaseInitializer
                         Main NVARCHAR(255),
                         Speed FLOAT
                     )
-                END";
+                END;
+
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Users' AND xtype='U')
+                BEGIN
+                    CREATE TABLE Users (
+                        Id INT IDENTITY(1,1) PRIMARY KEY,
+                        Username NVARCHAR(50) NOT NULL UNIQUE,
+                        PasswordHash NVARCHAR(256) NOT NULL
+                    );
+                END;
+
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RefreshTokens' AND xtype='U')
+                BEGIN
+                    CREATE TABLE RefreshTokens (
+                        Id INT IDENTITY(1,1) PRIMARY KEY,
+                        Token NVARCHAR(256) NOT NULL,
+                        ExpirationDate DATETIME2 NOT NULL,
+                        UserId INT NOT NULL,
+                        IsRevoked BIT NOT NULL DEFAULT 0,
+                        FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
+                    );
+                END;";
 
             await connection.ExecuteAsync(sql);
         }
