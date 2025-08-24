@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using Technical_Test.Application.DTOs;
 using Technical_Test.Application.Interfaces;
 using Technical_Test.Domain.Services.Interfaces;
@@ -40,8 +43,8 @@ public class AuthController : ControllerBase
                 return Unauthorized(new { message = "Invalid username or password." });
             }
 
-            
-            var token = _tokenService.GenerateJwtToken(user);
+            var roles = await _authService.GetUserRolesAsync(user.Id);
+            var token = _tokenService.GenerateJwtToken(user, roles);
             var refreshToken = await _authService.GenerateRefreshTokenAsync(user.Id);
 
             return Ok(new { AccessToken = token, RefreshToken = refreshToken });
@@ -54,6 +57,27 @@ public class AuthController : ControllerBase
             return StatusCode(500, "Error processing request");
 
         }
+    }
+
+    [HttpPost("assign-role")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto assignRoleDto)
+    {
+        try
+        {
+            var success = await _authService.AddUserToRoleAsync(assignRoleDto.UserId, assignRoleDto.RoleName);
+            if (!success)
+            {
+                return BadRequest("Failed to assign role. User or role may not exist.");
+            }
+
+            return Ok("Role assigned successfully.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Error processing the request");
+        }
+
     }
 
 
@@ -95,8 +119,12 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Invalid refresh token." });
         }
 
-        var newAccessToken = _tokenService.GenerateJwtToken(user);
-        await _authService.RevokeRefreshTokenAsync(refreshToken); // Revoga o token antigo por segurança
+        var roles = await _authService.GetUserRolesAsync(user.Id);
+
+        var newAccessToken = _tokenService.GenerateJwtToken(user, roles);
+
+        await _authService.RevokeRefreshTokenAsync(refreshToken);
+
         var newRefreshToken = await _authService.GenerateRefreshTokenAsync(user.Id);
 
         return Ok(new { AccessToken = newAccessToken, RefreshToken = newRefreshToken });

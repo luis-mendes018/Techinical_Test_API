@@ -31,7 +31,6 @@ public class AuthService : IAuthService
         return user;
     }
 
-
     public async Task<User> RegisterUserAsync(RegisterDto registerDto)
     {
         try
@@ -97,4 +96,23 @@ public class AuthService : IAuthService
         await _userRepository.RevokeRefreshTokenAsync(refreshToken);
     }
 
+    public async Task<IEnumerable<string>> GetUserRolesAsync(int userId)
+    {
+        return await _userRepository.GetUserRolesAsync(userId);
+    }
+
+    public async Task<bool> AddUserToRoleAsync(int userId, string roleName)
+    {
+        try
+        {
+            var rowsAffected = await _userRepository.AddUserToRoleAsync(userId, roleName);
+
+            return rowsAffected > 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: {0}", ex.Message);
+            return false;
+        }
+    }
 }

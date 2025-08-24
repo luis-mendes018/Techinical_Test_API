@@ -8,6 +8,7 @@ using System.Text;
 
 using Technical_Test.API.Services;
 using Technical_Test.Application.DTOs;
+using Technical_Test.Application.DTOs.RolesDTOs;
 using Technical_Test.Application.Interfaces;
 using Technical_Test.Application.Services;
 using Technical_Test.Application.Validators;
@@ -82,6 +83,7 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration.GetSection("JwtSettings:Audience").Value,
         ValidateLifetime = true
     };
+
 });
 
 builder.Services.AddAuthorization();
@@ -95,14 +97,17 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 //Respositories
 builder.Services.AddScoped<IUserRepository, UserRepository>(); 
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 //FluentValidation
 builder.Services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
 builder.Services.AddScoped<IValidator<RegisterDto>, RegisterDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateCreateRoleDto>, UpdateCreateRoleDtoValidator>();
 
 var app = builder.Build();
 

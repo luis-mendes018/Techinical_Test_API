@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Interfaces\IRoleService.cs~RF38e3a1ac.TMP" />
     <None Remove="Interfaces\IWeatherService.cs~RF2e996d1b.TMP" />
   </ItemGroup>
 

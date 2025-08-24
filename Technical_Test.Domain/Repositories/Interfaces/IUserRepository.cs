@@ -12,4 +12,6 @@ public interface IUserRepository
     Task RevokeRefreshTokenAsync(string token);
 
     Task<User> GetUserByIdAsync(int id);
+    Task<IEnumerable<string>> GetUserRolesAsync(int userId);
+    Task<int> AddUserToRoleAsync(int userId, string roleName);
 }

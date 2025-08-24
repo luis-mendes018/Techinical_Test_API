@@ -1,6 +1,8 @@
 ﻿using Dapper;
+
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+
 using Technical_Test.Domain.Entities;
 using Technical_Test.Domain.Repositories.Interfaces;
 
@@ -73,4 +75,53 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<IEnumerable<string>> GetUserRolesAsync(int userId)
+    {
+        var sql = "SELECT R.Name FROM UserRoles UR INNER JOIN Roles R ON UR.RoleId = R.Id WHERE UR.UserId = @UserId";
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            return await connection.QueryAsync<string>(sql, new { UserId = userId });
+        }
+    }
+
+    public async Task<int> AddUserToRoleAsync(int userId, string roleName)
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            await connection.OpenAsync();
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+
+                    var roleId = await connection.QuerySingleOrDefaultAsync<int?>(
+                        "SELECT Id FROM Roles WHERE Name = @RoleName",
+                        new { RoleName = roleName },
+                        transaction: transaction);
+
+
+                    if (!roleId.HasValue)
+                    {
+                        transaction.Rollback();
+                        return 0;
+                    }
+
+                    var rowsAffected = await connection.ExecuteAsync(
+                      "INSERT INTO UserRoles (UserId, RoleId) SELECT @UserId, @RoleId WHERE NOT EXISTS (SELECT 1 FROM UserRoles WHERE UserId = @UserId AND RoleId = @RoleId)",
+                    new { UserId = userId, RoleId = roleId.Value },
+                    transaction: transaction);
+
+
+                    transaction.Commit();
+
+                    return rowsAffected;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
 }

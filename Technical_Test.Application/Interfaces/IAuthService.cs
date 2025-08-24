@@ -11,4 +11,8 @@ public interface IAuthService
     Task<User> ValidateRefreshTokenAsync(string refreshToken);
 
     Task RevokeRefreshTokenAsync(string refreshToken);
+
+    Task<IEnumerable<string>> GetUserRolesAsync(int userId);
+
+    Task<bool> AddUserToRoleAsync(int userId, string roleName);
 }

@@ -1,5 +1,4 @@
 ﻿using Dapper;
-
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
@@ -34,7 +33,7 @@ public class DatabaseInitializer
             }
         }
 
-        // Cria a tabela na nova base de dados
+        // Criação das tabelas na base de dados
         await using (var connection = new SqlConnection(_connectionString))
         {
             var sql = @"
@@ -74,7 +73,26 @@ public class DatabaseInitializer
                         IsRevoked BIT NOT NULL DEFAULT 0,
                         FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
                     );
-                END;";
+                END;
+
+               IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Roles' AND xtype='U')
+               BEGIN
+                  CREATE TABLE Roles (
+                  Id INT IDENTITY(1,1) PRIMARY KEY,
+                  Name NVARCHAR(50) NOT NULL UNIQUE
+                 );
+               END;
+
+              IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='UserRoles' AND xtype='U')
+              BEGIN
+                 CREATE TABLE UserRoles (
+                   UserId INT NOT NULL,
+                   RoleId INT NOT NULL,
+                   PRIMARY KEY (UserId, RoleId),
+                   FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
+                   FOREIGN KEY (RoleId) REFERENCES Roles(Id) ON DELETE CASCADE
+                );
+               END;";
 
             await connection.ExecuteAsync(sql);
         }

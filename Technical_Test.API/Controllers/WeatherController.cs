@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Technical_Test.Application.Interfaces;
 
 namespace Technical_Test.API.Controllers;
@@ -84,6 +85,12 @@ public class WeatherController : ControllerBase
     [HttpDelete("delete-data/{id}")]
     public async Task<IActionResult> DeleteRecordedData(int id)
     {
+        var user = User.Identity as ClaimsIdentity;
+
+        if (!user.HasClaim(ClaimTypes.Role, "Admin") && !user.HasClaim(ClaimTypes.Role, "Manager"))
+        {
+            return StatusCode(403, new { message = "Access denied. Only administrators or managers can delete data." });
+        }
         try
         {
             var success = await _weatherService.DeleteDataAsync(id);

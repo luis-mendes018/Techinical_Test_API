@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 
 using Technical_Test.Domain.Entities;
+using Technical_Test.Domain.Repositories.Interfaces;
 using Technical_Test.Domain.Services.Interfaces;
 
 namespace Technical_Test.API.Services;
@@ -13,23 +14,29 @@ public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
 
-    public TokenService(IConfiguration configuration)
+    public TokenService(IConfiguration configuration, IUserRepository userRepository)
     {
         _configuration = configuration;
     }
 
-    public string GenerateJwtToken(User user)
+    public string GenerateJwtToken(User user, IEnumerable<string> roles)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SigningKey"]);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(JwtRegisteredClaimNames.Iss, _configuration["JwtSettings:Issuer"]),
             new Claim(JwtRegisteredClaimNames.Aud, _configuration["JwtSettings:Audience"])
         };
+
+        // Adicione as claims de role que foram passadas como parâmetro
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -41,4 +48,6 @@ public class TokenService : ITokenService
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
 }
+
