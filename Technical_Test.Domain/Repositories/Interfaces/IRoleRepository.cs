@@ -4,7 +4,7 @@ namespace Technical_Test.Domain.Repositories.Interfaces;
 
 public interface IRoleRepository
 {
-    Task<IEnumerable<Role>> GetAllRolesAsync();
+    Task<(IEnumerable<Role> Roles, int TotalCount)> GetAllRolesAsync(int page, int pageSize);
     Task<Role> GetRoleByIdAsync(int id);
     Task<int> CreateRoleAsync(string newName);
     Task UpdateRoleAsync(Role role);

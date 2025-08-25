@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Technical_Test.Application.DTOs.RolesDTOs;
 using Technical_Test.Application.Interfaces;
@@ -24,10 +25,24 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllRoles()
+    public async Task<IActionResult> GetAllRoles([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var roles = await _roleService.GetAllRolesAsync();
-        return Ok(roles);
+        try
+        {
+            var roles = await _roleService.GetAllRolesAsync(page, pageSize);
+            Response.Headers.Append("X-Pagination-Current-Page", roles.CurrentPage.ToString());
+            Response.Headers.Append("X-Pagination-Page-Size", roles.PageSize.ToString());
+            Response.Headers.Append("X-Pagination-Total-Items", roles.TotalItems.ToString());
+            Response.Headers.Append("X-Pagination-Total-Pages", roles.TotalPages.ToString());
+            
+            return Ok(roles.Items);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error {0}", ex.Message);
+            return StatusCode(500, "Error processing request");
+        }
+
     }
 
     [HttpGet("{id}")]

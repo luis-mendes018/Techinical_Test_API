@@ -135,11 +135,28 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    public async Task<(IEnumerable<User> Users, int TotalCount)> GetAllUsersAsync(int page, int pageSize)
     {
+        var sql = @"
+            SELECT * FROM Users
+            ORDER BY Id
+            OFFSET @Offset ROWS
+            FETCH NEXT @PageSize ROWS ONLY;
+            
+            SELECT COUNT(Id) FROM Users;";
+
         using (var connection = new SqlConnection(_connectionString))
         {
-            return await connection.QueryAsync<User>("SELECT Id, Username FROM Users");
+            var multi = await connection.QueryMultipleAsync(sql, new
+            {
+                Offset = (page - 1) * pageSize,
+                PageSize = pageSize
+            });
+
+            var users = await multi.ReadAsync<User>();
+            var totalCount = await multi.ReadSingleAsync<int>();
+
+            return (users, totalCount);
         }
     }
 

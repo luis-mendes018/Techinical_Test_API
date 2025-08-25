@@ -4,7 +4,7 @@ namespace Technical_Test.Domain.Repositories.Interfaces;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAllUsersAsync();
+    Task<(IEnumerable<User> Users, int TotalCount)> GetAllUsersAsync(int page, int pageSize);
 
     Task<int> UpdateUserAsync(int userId, string newUsername);
     Task<int> DeleteUserAsync(int userId);

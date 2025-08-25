@@ -18,21 +18,24 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         try
         {
-            var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
+            var pagedResult = await _userService.GetAllUsersAsync(page, pageSize);
 
+            Response.Headers.Append("X-Pagination-Current-Page", pagedResult.CurrentPage.ToString());
+            Response.Headers.Append("X-Pagination-Page-Size", pagedResult.PageSize.ToString());
+            Response.Headers.Append("X-Pagination-Total-Items", pagedResult.TotalItems.ToString());
+            Response.Headers.Append("X-Pagination-Total-Pages", pagedResult.TotalPages.ToString());
+
+            return Ok(pagedResult.Items);
         }
         catch (Exception ex)
         {
-
-            Console.WriteLine("Error log: {0} ", ex.Message);
+            Console.WriteLine("Error {0}", ex.Message);
             return StatusCode(500, "Error processing request");
         }
-
     }
 
     [HttpGet("{id}")]

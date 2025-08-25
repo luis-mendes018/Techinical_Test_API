@@ -43,18 +43,18 @@ public class WeatherController : ControllerBase
     }
 
     [HttpGet("record-data")]
-    public async Task<IActionResult> GetRecordedData()
+    public async Task<IActionResult> GetRecordedData([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         try
         {
-            var weatherRecords = await _weatherService.GetRecordedDataAsync();
+            var pagedResult = await _weatherService.GetRecordedDataAsync(page, pageSize);
 
-            if (weatherRecords == null)
-            {
-                return NotFound();
-            }
+            Response.Headers.Append("X-Pagination-Current-Page", pagedResult.CurrentPage.ToString());
+            Response.Headers.Append("X-Pagination-Page-Size", pagedResult.PageSize.ToString());
+            Response.Headers.Append("X-Pagination-Total-Items", pagedResult.TotalItems.ToString());
+            Response.Headers.Append("X-Pagination-Total-Pages", pagedResult.TotalPages.ToString());
 
-            return Ok(weatherRecords);
+            return Ok(pagedResult.Items);
         }
         catch (Exception ex)
         {

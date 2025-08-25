@@ -49,7 +49,7 @@ public class WeatherRepository : IWeatherRepository
 
     }
 
-    public async Task<IEnumerable<Weather>> GetAsync()
+    public async Task<(IEnumerable<Weather> WeatherData, int TotalCount)> GetAsync(int page, int pageSize)
     {
         if (string.IsNullOrEmpty(_connectionString))
         {
@@ -58,11 +58,16 @@ public class WeatherRepository : IWeatherRepository
 
         using (var connection = new SqlConnection(_connectionString))
         {
-            var result = await connection.QueryAsync<Weather>(
+            var multi = await connection.QueryMultipleAsync(
                 "dbo.sp_GetAllWeatherHistory",
+                new { PageNumber = page, PageSize = pageSize },
                 commandType: CommandType.StoredProcedure
             );
-            return result;
+
+            var weatherData = await multi.ReadAsync<Weather>();
+            var totalCount = await multi.ReadSingleAsync<int>();
+
+            return (weatherData, totalCount);
         }
     }
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+
+using Technical_Test.Application.DTOs;
 using Technical_Test.Application.Interfaces;
 using Technical_Test.Domain.Clients;
 using Technical_Test.Domain.Entities;
@@ -35,9 +37,32 @@ public class WeatherService : IWeatherService
         return weatherData;
     }
 
-    public async Task<IEnumerable<Weather>> GetRecordedDataAsync()
+    public async Task<PagedResultDto<Weather>> GetRecordedDataAsync(int page, int pageSize)
     {
-        return await _weatherRepository.GetAsync();
+        var (weatherData, totalCount) = await _weatherRepository.GetAsync(page, pageSize);
+
+        var weather = weatherData.Select(w => new Weather
+        {
+            Id = w.Id,
+            Lon = w.Lon,
+            Lat = w.Lat,
+            TempMin = w.TempMin,
+            TempMax = w.TempMax,
+            Visibility = w.Visibility,
+            Sunrise = w.Sunrise,
+            Sunset = w.Sunset,
+            Description = w.Description,
+            Main = w.Main,
+            Speed = w.Speed
+        });
+
+        return new PagedResultDto<Weather>
+        {
+            Items = weather,
+            TotalItems = totalCount,
+            CurrentPage = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<Weather> GetRecordedDataByIdAsync(int id)

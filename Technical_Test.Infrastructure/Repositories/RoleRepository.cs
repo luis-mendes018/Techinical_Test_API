@@ -16,11 +16,28 @@ public class RoleRepository : IRoleRepository
              ?? throw new InvalidOperationException("Connection String not found");
     }
 
-    public async Task<IEnumerable<Role>> GetAllRolesAsync()
+    public async Task<(IEnumerable<Role> Roles, int TotalCount)> GetAllRolesAsync(int page, int pageSize)
     {
+        var sql = @"
+            SELECT * FROM Roles
+            ORDER BY Id
+            OFFSET @Offset ROWS
+            FETCH NEXT @PageSize ROWS ONLY;
+            
+            SELECT COUNT(Id) FROM Roles;";
+
         using (var connection = new SqlConnection(_connectionString))
         {
-            return await connection.QueryAsync<Role>("SELECT Id, Name FROM Roles");
+            var multi = await connection.QueryMultipleAsync(sql, new
+            {
+                Offset = (page - 1) * pageSize,
+                PageSize = pageSize
+            });
+
+            var roles = await multi.ReadAsync<Role>();
+            var totalCount = await multi.ReadSingleAsync<int>();
+
+            return (roles, totalCount);
         }
     }
 

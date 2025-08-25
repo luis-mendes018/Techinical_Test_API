@@ -1,4 +1,5 @@
-﻿using Technical_Test.Application.DTOs.UsersDTOs;
+﻿using Technical_Test.Application.DTOs;
+using Technical_Test.Application.DTOs.UsersDTOs;
 using Technical_Test.Application.Interfaces;
 using Technical_Test.Domain.Repositories.Interfaces;
 
@@ -13,9 +14,9 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+    public async Task<PagedResultDto<UserDto>> GetAllUsersAsync(int page, int pageSize)
     {
-        var users = await _userRepository.GetAllUsersAsync();
+        var (users, totalCount) = await _userRepository.GetAllUsersAsync(page, pageSize);
 
         var userDtos = users.Select(u => new UserDto
         {
@@ -23,7 +24,13 @@ public class UserService : IUserService
             Username = u.Username
         });
 
-        return userDtos;
+        return new PagedResultDto<UserDto>
+        {
+            Items = userDtos,
+            TotalItems = totalCount,
+            CurrentPage = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<UserDto> GetUserByIdAsync(int userId)

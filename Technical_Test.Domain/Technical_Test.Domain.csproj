@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Entities\User.cs~RF391f746e.TMP" />
     <None Remove="Repositories\Interfaces\IRoleRepository.cs~RF38d81d4f.TMP" />
+    <None Remove="Repositories\Interfaces\IRoleRepository.cs~RF3f4781e9.TMP" />
     <None Remove="Repositories\Interfaces\IUserRepository.cs~RF3090be3a.TMP" />
   </ItemGroup>
 

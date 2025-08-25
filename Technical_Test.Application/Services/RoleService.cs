@@ -1,4 +1,5 @@
-﻿using Technical_Test.Application.Interfaces;
+﻿using Technical_Test.Application.DTOs;
+using Technical_Test.Application.Interfaces;
 using Technical_Test.Domain.Entities;
 using Technical_Test.Domain.Repositories.Interfaces;
 
@@ -13,9 +14,17 @@ public class RoleService : IRoleService
         _roleRepository = roleRepository;
     }
 
-    public async Task<IEnumerable<Role>> GetAllRolesAsync()
+    public async Task<PagedResultDto<Role>> GetAllRolesAsync(int page, int pageSize)
     {
-        return await _roleRepository.GetAllRolesAsync();
+        var (roles, totalCount) = await _roleRepository.GetAllRolesAsync(page, pageSize);
+
+        return new PagedResultDto<Role>
+        {
+            Items = roles,
+            TotalItems = totalCount,
+            CurrentPage = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<Role> GetRoleByIdAsync(int id)
