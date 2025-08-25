@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using Technical_Test.Application.DTOs;
+using Technical_Test.Application.DTOs.RolesDTOs;
 using Technical_Test.Application.Interfaces;
-using Technical_Test.Domain.Services.Interfaces;
 
 namespace Technical_Test.API.Controllers;
 
@@ -53,7 +51,7 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
 
-            Console.WriteLine("Error log: {0} ", ex);
+            Console.WriteLine("Error log: {0} ", ex.Message);
             return StatusCode(500, "Error processing request");
 
         }
@@ -68,16 +66,38 @@ public class AuthController : ControllerBase
             var success = await _authService.AddUserToRoleAsync(assignRoleDto.UserId, assignRoleDto.RoleName);
             if (!success)
             {
-                return BadRequest("Failed to assign role. User or role may not exist.");
+                return BadRequest("Failed to assign role. User or role may not exist or this user already has this role.");
             }
 
             return Ok("Role assigned successfully.");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(500, "Error processing the request");
+            Console.WriteLine("Error log: {0} ", ex.Message);
+            return StatusCode(500, "Error processing request");
         }
 
+    }
+
+    [HttpDelete("revoke-role")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> RevokeRole([FromBody] RevokeRoleByIdDto revokeRoleByIdDto)
+    {
+        try
+        {
+            var success = await _authService.RevokeUserRoleByIdAsync(revokeRoleByIdDto.UserId, revokeRoleByIdDto.RoleId);
+            if (!success)
+            {
+                return BadRequest("Failed to revoke role. The user-role association may not exist.");
+            }
+
+            return Ok("Role revoked successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error log: {0} ", ex.Message);
+            return StatusCode(500, "Error processing request");
+        }
     }
 
 
@@ -102,9 +122,10 @@ public class AuthController : ControllerBase
             return Ok(new { message = "User registered successfully." });
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(500, "Error processing the request");
+            Console.WriteLine("Error log: {0} ", ex.Message);
+            return StatusCode(500, "Error processing request");
         }
 
     }

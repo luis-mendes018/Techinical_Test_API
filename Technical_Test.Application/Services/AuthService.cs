@@ -70,7 +70,7 @@ public class AuthService : IAuthService
         var refreshToken = new RefreshToken
         {
             Token = token,
-            ExpirationDate = DateTime.UtcNow.AddDays(7), // Token expira em 7 dias
+            ExpirationDate = DateTime.UtcNow.AddHours(2),
             UserId = userId,
             IsRevoked = false
         };
@@ -115,4 +115,18 @@ public class AuthService : IAuthService
             return false;
         }
     }
+
+    public async Task<bool> RevokeUserRoleByIdAsync(int userId, int roleId)
+    {
+        try
+        {
+            var rowsAffected = await _userRepository.RevokeUserRoleByIdAsync(userId, roleId);
+            return rowsAffected > 0;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
 }

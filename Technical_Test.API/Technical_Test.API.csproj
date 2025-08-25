@@ -7,11 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Authorization\RoleRequirement.cs~RF39db89b9.TMP" />
+    <None Remove="Controllers\UsersController.cs~RF3e599be0.TMP" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 

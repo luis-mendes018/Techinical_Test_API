@@ -1,6 +1,6 @@
 ﻿using Technical_Test.Domain.Entities;
 
-namespace Technical_Test.Domain.Services.Interfaces;
+namespace Technical_Test.Application.Interfaces;
 
 public interface ITokenService
 {

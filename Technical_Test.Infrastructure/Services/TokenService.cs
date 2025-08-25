@@ -1,14 +1,14 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using Technical_Test.Application.Interfaces;
 using Technical_Test.Domain.Entities;
 using Technical_Test.Domain.Repositories.Interfaces;
-using Technical_Test.Domain.Services.Interfaces;
 
-namespace Technical_Test.API.Services;
+
+namespace Technical_Test.Infrastructure.Services;
 
 public class TokenService : ITokenService
 {

@@ -18,6 +18,10 @@ public class RoleService : IRoleService
         return await _roleRepository.GetAllRolesAsync();
     }
 
+    public async Task<Role> GetRoleByIdAsync(int id)
+    {
+        return await _roleRepository.GetRoleByIdAsync(id);
+    }
     public async Task<bool> UpdateRoleAsync(int id, string newName)
     {
         var role = await _roleRepository.GetRoleByIdAsync(id);

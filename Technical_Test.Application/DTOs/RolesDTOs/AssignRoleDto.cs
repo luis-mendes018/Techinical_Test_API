@@ -1,4 +1,4 @@
-﻿namespace Technical_Test.Application.DTOs;
+﻿namespace Technical_Test.Application.DTOs.RolesDTOs;
 
 public class AssignRoleDto
 {

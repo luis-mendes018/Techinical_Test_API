@@ -15,4 +15,6 @@ public interface IAuthService
     Task<IEnumerable<string>> GetUserRolesAsync(int userId);
 
     Task<bool> AddUserToRoleAsync(int userId, string roleName);
+
+    Task<bool> RevokeUserRoleByIdAsync(int userId, int roleId);
 }

@@ -1,8 +1,11 @@
 ﻿using FluentValidation;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using Technical_Test.Application.DTOs.RolesDTOs;
 using Technical_Test.Application.Interfaces;
+using Technical_Test.Application.Services;
 
 namespace Technical_Test.API.Controllers;
 
@@ -27,8 +30,30 @@ public class RolesController : ControllerBase
         return Ok(roles);
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetRoleById(int id)
+    {
+        try
+        {
+            var role = await _roleService.GetRoleByIdAsync(id);
+
+            if (role == null)
+            {
+                return NotFound("Role not found.");
+            }
+
+            return Ok(role);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine("Error {0}", ex.Message);
+            return StatusCode(500, "Error processing request");
+        }
+    }
+
     [HttpPost("create")]
-    public async Task<IActionResult> CreateRole([FromBody] UpdateCreateRoleDto updateCreateDto, string roleName)
+    public async Task<IActionResult> CreateRole([FromBody] UpdateCreateRoleDto updateCreateDto)
     {
         try
         {
@@ -37,7 +62,7 @@ public class RolesController : ControllerBase
             {
                 return BadRequest(validationResult.Errors);
             }
-
+            var roleName = updateCreateDto.NewName;
             var success = await _roleService.CreateRoleAsync(roleName);
             if (!success)
             {

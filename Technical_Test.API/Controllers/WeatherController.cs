@@ -35,8 +35,9 @@ public class WeatherController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine("Error log: {0} ", ex.Message);
             return StatusCode(500, new { message = "An internal server error occurred." });
         }
     }

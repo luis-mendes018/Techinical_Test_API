@@ -1,20 +1,17 @@
 using FluentValidation;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
 using System.Text;
-
-using Technical_Test.API.Services;
 using Technical_Test.Application.DTOs;
 using Technical_Test.Application.DTOs.RolesDTOs;
 using Technical_Test.Application.Interfaces;
 using Technical_Test.Application.Services;
 using Technical_Test.Application.Validators;
+using Technical_Test.Domain.Clients;
 using Technical_Test.Domain.Repositories.Interfaces;
-using Technical_Test.Domain.Services.Interfaces;
 using Technical_Test.Infrastructure.Data;
+using Technical_Test.Infrastructure.External;
 using Technical_Test.Infrastructure.Repositories;
 using Technical_Test.Infrastructure.Services;
 
@@ -67,7 +64,7 @@ builder.Services.AddAuthentication(options =>
 .AddJwtBearer(options =>
 {
     var signingKey = builder.Configuration.GetSection("JwtSettings:SigningKey").Value;
-    // Lógica para verificar se a chave é nula
+    
     if (string.IsNullOrEmpty(signingKey))
     {
         throw new InvalidOperationException("JwtSettings:SigningKey is not configured.");
@@ -98,6 +95,10 @@ builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+//Clients(External API)
+builder.Services.AddScoped<IWeatherApiClient, WeatherApiClient>();
 
 //Respositories
 builder.Services.AddScoped<IUserRepository, UserRepository>(); 

@@ -1,8 +1,6 @@
 ﻿using Dapper;
-
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-
 using Technical_Test.Domain.Entities;
 using Technical_Test.Domain.Repositories.Interfaces;
 
@@ -124,4 +122,45 @@ public class UserRepository : IUserRepository
             }
         }
     }
+
+    public async Task<int> RevokeUserRoleByIdAsync(int userId, int roleId)
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            var rowsAffected = await connection.ExecuteAsync(
+                "DELETE FROM UserRoles WHERE UserId = @UserId AND RoleId = @RoleId",
+                new { UserId = userId, RoleId = roleId });
+
+            return rowsAffected;
+        }
+    }
+
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            return await connection.QueryAsync<User>("SELECT Id, Username FROM Users");
+        }
+    }
+
+    public async Task<int> UpdateUserAsync(int userId, string newUsername)
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            return await connection.ExecuteAsync(
+                "UPDATE Users SET Username = @NewUsername WHERE Id = @UserId",
+                new { UserId = userId, NewUsername = newUsername });
+        }
+    }
+
+    public async Task<int> DeleteUserAsync(int userId)
+    {
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            return await connection.ExecuteAsync(
+                "DELETE FROM Users WHERE Id = @UserId",
+                new { UserId = userId });
+        }
+    }
+
 }
