@@ -84,12 +84,49 @@ Aqui, é usado o endpoint que consulta um determinado dado por id, mas a API tam
 
 
 <p>Essa é a visão geral do projeto.</p>
+<br>
+<br>
+<br>
+<br>
+<h1>Instruções de configuração 👩🏿‍💻⚙️</h1>
 
+<p>
+  Para você que irá testar o projeto, é necessário alguns procedimentos para que ele rode corretamente sem bugs, sem erros e sem problemas. 
+  Segue os procedimentos abaixo:
+</p>
+<br>
+<br>
+<h1>1. Ferramentas 🛠️</h1>
+<br>
+<br>
+<p>
+  Certifique-se de ter as 
+  ferramentas Visual Studio IDE(ou VSCode caso já tenha o .NET 8 configurado nele ) e o SQL Server com a ferramenta SQL Server Management Studio
+  instaladas na sua máquina. Caso não as tenha, segue os links abaixo, caso já as tenha, pode seguir direto para o próximo passo.
 
+  - Visual Studio: https://visualstudio.microsoft.com/downloads/
+    <br>
+  - SQL Server: https://www.microsoft.com/pt-br/sql-server/sql-server-downloads
+    <br>
+  - SQL Server Managment Studio: https://learn.microsoft.com/en-us/ssms/install/install  
+</p>
+<br>
+<br>
+<h1>2. Clonagem do repositório e execução do projeto</h1>
+<br>
+<br>
+<p>
+  - Clone o repositório usando o comando git clone https://github.com/luis-mendes018/Techinical_Test_API.git
+  
+  - Abra o projeto com o visual studio
+  - Vá até o arquivo appsettings.json e insira sua string de conexão conforma a estrutura do código abaixo 👇🏿
 
+   "ConnectionStrings": {
+  "DefaultConnection": "Server={nome_do_servidor};Database=WeatherDatabase;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;" // Substitua pela sua string de conexão.
+},
 
-
-
+- Execute o projeto e ao fazer isso, será gerado o banco de dados automaticamente com as suas respectivas tabelas, já que o projeto usa o dapper e eu o configurarei para isso via código.
+</p>
 
 
 
