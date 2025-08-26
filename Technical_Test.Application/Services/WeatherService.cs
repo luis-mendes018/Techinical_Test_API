@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-
 using Technical_Test.Application.DTOs;
 using Technical_Test.Application.Interfaces;
 using Technical_Test.Domain.Clients;
@@ -53,7 +52,8 @@ public class WeatherService : IWeatherService
             Sunset = w.Sunset,
             Description = w.Description,
             Main = w.Main,
-            Speed = w.Speed
+            Speed = w.Speed,
+            City = w.City
         });
 
         return new PagedResultDto<Weather>

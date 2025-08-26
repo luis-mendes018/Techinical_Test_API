@@ -1,12 +1,8 @@
 ﻿using FluentValidation;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
 using Technical_Test.Application.DTOs.RolesDTOs;
 using Technical_Test.Application.Interfaces;
-using Technical_Test.Application.Services;
 
 namespace Technical_Test.API.Controllers;
 

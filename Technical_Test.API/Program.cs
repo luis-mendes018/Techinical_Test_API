@@ -110,6 +110,8 @@ builder.Services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
 builder.Services.AddScoped<IValidator<RegisterDto>, RegisterDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateCreateRoleDto>, UpdateCreateRoleDtoValidator>();
 
+builder.Configuration.AddUserSecrets<Program>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

@@ -32,7 +32,6 @@ public class TokenService : ITokenService
             new Claim(JwtRegisteredClaimNames.Aud, _configuration["JwtSettings:Audience"])
         };
 
-        // Adicione as claims de role que foram passadas como parâmetro
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));

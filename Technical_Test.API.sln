@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technical_Test.API", "Technical_Test.API\Technical_Test.API.csproj", "{93CF5944-4F23-4FE8-86CA-4BBA0F722326}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technical_Test.Infrastructure", "Technical_Test.Infrastructure\Technical_Test.Infrastructure.csproj", "{CB73FD62-6F4B-4977-B50E-F3CE8891D006}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technical_Test.Application", "Technical_Test.Application\Technical_Test.Application.csproj", "{BF01A417-AAA2-42C1-8440-24CA1525DEC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technical_Test.Tests", "tests\Technical_Test.Tests\Technical_Test.Tests.csproj", "{1F50EC50-81B5-4127-84BE-74E1A4796CA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{BF01A417-AAA2-42C1-8440-24CA1525DEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF01A417-AAA2-42C1-8440-24CA1525DEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF01A417-AAA2-42C1-8440-24CA1525DEC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F50EC50-81B5-4127-84BE-74E1A4796CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F50EC50-81B5-4127-84BE-74E1A4796CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F50EC50-81B5-4127-84BE-74E1A4796CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F50EC50-81B5-4127-84BE-74E1A4796CA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1F50EC50-81B5-4127-84BE-74E1A4796CA9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A864DFED-ABBD-4D0F-AEC3-1EE2DE591FC4}

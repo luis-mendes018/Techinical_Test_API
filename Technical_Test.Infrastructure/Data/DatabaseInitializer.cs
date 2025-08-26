@@ -21,7 +21,6 @@ public class DatabaseInitializer
 
     public async Task InitializeAsync()
     {
-        // Verifica se o banco de dados existe e cria se o mesmo não existir
         await using (var connection = new SqlConnection(_masterConnectionString))
         {
             var sql = $"SELECT COUNT(*) FROM sys.databases WHERE name = @name";
