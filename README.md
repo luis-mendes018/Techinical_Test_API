@@ -208,6 +208,26 @@ Aqui, é usado o endpoint que consulta um determinado dado por id, mas a API tam
 ```sql
 INSERT INTO UserRoles(UserId, RoleId) VALUES (1, 1) ---Obs: Atribua os IDs conforme o número dos mesmos. Aqui é um exemplo, supondo que seja os primeiros cadastros
 ```
+Fazendo isso, você já poderá realizar a requisição para a API da OpenWatherMap sem problema de autenticação e autorização
 </p>
+<hr>
+<br>
 
+<h1>Executando as Procedures</h1>
+<hr>
+<br>
+<p>
+  Há diversas maneiras de executar as procedures. Mas irei passar aqui, como eu as executaria.
+  <br>
+
+  Depois que o projeto foi clonado, você verá dentro dele, esses scripts:
+  <br>
+  <img width="295" height="121" alt="image" src="https://github.com/user-attachments/assets/19a049bf-a2a9-443d-9b63-27ea3473ac6d" />
+  <br>
+  Você terá que abrir o SQL Server Managment Studio e ir em Stored Procedures ou Procedimentos Armazenados, criar uma proc e executar os Scripts
+  Dentro dos arquivos, pois eles são responsáveis pelas operações CRUD e retornar o histórico do clima gravado no banco.
+  <img width="581" height="174" alt="image" src="https://github.com/user-attachments/assets/e82ce9a0-4755-4190-9e70-c7687acf74fb" />
+
+  Feito os procedimentos corretamente, o projeto irá rodar sem nenhum problema.
+</p>
 
