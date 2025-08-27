@@ -128,5 +128,33 @@ Aqui, é usado o endpoint que consulta um determinado dado por id, mas a API tam
 - Execute o projeto e ao fazer isso, será gerado o banco de dados automaticamente com as suas respectivas tabelas, já que o projeto usa o dapper e eu o configurarei para isso via código.
 </p>
 
+<br>
+<br>
+<h1>Enviando a requisição para a API da openWeatherMAP</h1>
+<br>
+<p>
+  Para enviar uma requisição para a API da OpenWeatherMap, é necessário uma chave de API para isso. Segue os procedimentos:
+  
+  Acesse o site da openWeatherMAP e faça login: https://home.openweathermap.org/users/sign_in
+  <br>
+  Caso você não tenha conta, será necessário cria-la.
+  <br>
 
+  - Depois que acessar sua conta, vá até uma opção chamada "My API Keys", conforme a imagem abaixo:
 
+ <img width="935" height="214" alt="print_api" src="https://github.com/user-attachments/assets/10c30da4-3f25-44c7-aee3-c92e19b04691" />
+  <br>
+  
+ - Depois disso, gere sua chave de API:
+  <img width="696" height="398" alt="image" src="https://github.com/user-attachments/assets/3631fe44-d64e-44d6-bc0c-51ea8721a96d" />
+  <br>
+  <br>
+  <br>
+
+  Após gerar a sua chave de API, vá até o arquivo appsettings.json e insire-a aqui:
+
+  "OpenWeatherMap": {
+  "ApiKey": "coloque_sua_chave_aqui"
+}
+
+</p>
