@@ -1,9 +1,10 @@
 <h1>Visão geral do Projeto 👩🏿‍💻🚀</h1>
-
+<hr>
 <p>Esse projeto coniste numa API que consome um outro serviço que pertence a OpenWeatherMap, que possui uma API que retorna dados meteorológicos de um determinado lugar, 
 retornando informações relevantes como temperatura mínima, temperatura máxima, descrição do clima e etc...</p> 
 
 <h4>Fluxo geral resumido do funcionamento do sistema:</h4>
+<hr>
 <ol>
   <li> O usuário insere o nome do lugar que pretende obter as informações climáticas;</li>
   <br>
@@ -87,9 +88,10 @@ Aqui, é usado o endpoint que consulta um determinado dado por id, mas a API tam
 <br>
 <br>
 <br>
+<hr>
 <br>
 <h1>Instruções de configuração 👩🏿‍💻⚙️</h1>
-
+<hr>
 <p>
   Para você que irá testar o projeto, é necessário alguns procedimentos para que ele rode corretamente sem bugs, sem erros e sem problemas. 
   Segue os procedimentos abaixo:
@@ -119,11 +121,13 @@ Aqui, é usado o endpoint que consulta um determinado dado por id, mas a API tam
   - Clone o repositório usando o comando git clone https://github.com/luis-mendes018/Techinical_Test_API.git
   
   - Abra o projeto com o visual studio
-  - Vá até o arquivo appsettings.json e insira sua string de conexão conforma a estrutura do código abaixo 👇🏿
+  - Vá até o arquivo appsettings.json e insira sua string de conexão conforme a estrutura do código abaixo 👇🏿
 
+```json
    "ConnectionStrings": {
   "DefaultConnection": "Server={nome_do_servidor};Database=WeatherDatabase;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;" // Substitua pela sua string de conexão.
 },
+```
 
 - Execute o projeto e ao fazer isso, será gerado o banco de dados automaticamente com as suas respectivas tabelas, já que o projeto usa o dapper e eu o configurarei para isso via código.
 </p>
@@ -152,9 +156,58 @@ Aqui, é usado o endpoint que consulta um determinado dado por id, mas a API tam
   <br>
 
   Após gerar a sua chave de API, vá até o arquivo appsettings.json e insire-a aqui:
-
+  
+```json
   "OpenWeatherMap": {
   "ApiKey": "coloque_sua_chave_aqui"
 }
-
+```
 </p>
+
+<br>
+<br>
+<br>
+<h1>Configurando Autenticação e Autorização🔐</h1>
+<hr>
+<br>
+<p>
+  Antes de testar o fluxo da aplicação, é nescessário configurar a lógica de autenticação e autorização, pois como foi dito anteriormente, se o usuário
+  não for autenticado, receberá um erro 401 ou um 403, caso esteja autenticado mas não tenha permissão para acessar determinado recurso. O procedimento
+  para a autenticação é simples, basta você ir mais uma vez até o arquivo appsettings.json e criar sua própria chave de API
+  no código abaixo:
+
+```json
+  "JwtSettings": {
+   "Issuer": "TechnicalTestApi",
+   "Audience": "TechnicalTestUsers",
+   "SigningKey": "crie sua chave de API AQUI"
+ },
+```
+ Ao fazer isso, a API já irá conseguir gerar o token jwt para login.
+</p>
+
+<p>
+  Agora para o procedimento de autorização, o procedimento é diferente.
+
+  Primeiramente, você precisará criar duas Roles obrigatórias, Admin e Manager. Abra o SQL Server Managment Studio e 
+  insira esse comando diretamente na tabela na Tabela roles:
+
+  ```Sql
+  INSERT INTO Roles (Name) VALUES ('Admin') ---id = 1
+  INSERT INTO Roles (Name) VALUES ('Manager') ---id = 2
+  ```
+<br>
+- Depois, registre um usuário na API. Você pode usuar o endpoint register, ele não exige autorização pois ele serve para o usuário que irá se cadastrar. 
+  Segue a imagem abaixo:
+
+  <img width="1856" height="801" alt="image" src="https://github.com/user-attachments/assets/45a63f31-6441-4cd6-a598-e39dff208277" />
+
+  <br>
+  Só executar e o usuário será cadastrado no banco. Depois isso, atribua esse usuário a uma role, inserindo esse comando:
+
+```sql
+INSERT INTO UserRoles(UserId, RoleId) VALUES (1, 1) ---Obs: Atribua os IDs conforme o número dos mesmos. Aqui é um exemplo, supondo que seja os primeiros cadastros
+```
+</p>
+
+
