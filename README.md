@@ -236,3 +236,27 @@ Fazendo isso, você já poderá realizar a requisição para a API da OpenWather
 <p>
  Link: https://openweathermap.org/api/one-call-3
 </p>
+
+<br>
+<br>
+<h1>Testes Unitários 🧪</h1>
+
+<p>
+  Para executar os testes unitários, você também deve inserir sua string de conexão nos testes de integração.
+  Veja o código abaixo:
+
+``` C#
+namespace Technical_Test.Tests.Integration;
+
+public DatabaseConnectionTests()
+    {
+        var configMock = new Mock<IConfiguration>();
+
+        configMock.SetupGet(c => c["ConnectionStrings:DefaultConnection"])
+                  .Returns("Server={nome_do_seu_servidor}\\SQLEXPRESS;Database=WeatherDatabase;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;");
+
+        _connectionString = configMock.Object["ConnectionStrings:DefaultConnection"];
+    }
+
+```
+</p>
