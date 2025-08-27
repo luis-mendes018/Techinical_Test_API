@@ -230,4 +230,9 @@ Fazendo isso, você já poderá realizar a requisição para a API da OpenWather
 
   Feito os procedimentos corretamente, o projeto irá rodar sem nenhum problema.
 </p>
-
+<hr>
+<br>
+<h1>Documentação da API da OpenWatherMap</h1>
+<p>
+ Link: https://openweathermap.org/api/one-call-3
+</p>
