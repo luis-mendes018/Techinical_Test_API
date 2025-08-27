@@ -253,7 +253,7 @@ public DatabaseConnectionTests()
         var configMock = new Mock<IConfiguration>();
 
         configMock.SetupGet(c => c["ConnectionStrings:DefaultConnection"])
-                  .Returns("Server={nome_do_seu_servidor}\\SQLEXPRESS;Database=WeatherDatabase;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;");
+                  .Returns("Server={nome_do_seu_servidor};Database=WeatherDatabase;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;");
 
         _connectionString = configMock.Object["ConnectionStrings:DefaultConnection"];
     }
