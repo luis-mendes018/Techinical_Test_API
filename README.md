@@ -197,7 +197,7 @@ Aqui, é usado o endpoint que consulta um determinado dado por id, mas a API tam
   INSERT INTO Roles (Name) VALUES ('Manager') ---id = 2
   ```
 <br>
-- Depois, registre um usuário na API. Você pode usuar o endpoint register, ele não exige autorização pois ele serve para o usuário que irá se cadastrar. 
+- Depois, registre um usuário na API. Você pode usar o endpoint register, ele não exige autorização pois ele serve para o usuário que irá se cadastrar. 
   Segue a imagem abaixo:
 
   <img width="1856" height="801" alt="image" src="https://github.com/user-attachments/assets/45a63f31-6441-4cd6-a598-e39dff208277" />
