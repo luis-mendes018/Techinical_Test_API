@@ -1,4 +1,4 @@
-<h1>Visão geral do Projeto 👩🏿‍💻🚀</h1>
+<h1>Visão geral do Projeto 👨🏿‍💻🚀</h1>
 <hr>
 <p>Esse projeto coniste numa API que consome um outro serviço que pertence a OpenWeatherMap, que possui uma API que retorna dados meteorológicos de um determinado lugar, 
 retornando informações relevantes como temperatura mínima, temperatura máxima, descrição do clima e etc...</p> 
